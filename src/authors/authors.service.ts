@@ -25,4 +25,8 @@ export class AuthorsService {
   remove(id: string) {
     return this.storageService.deleteAuthor(id);
   }
+
+  getBooks(id: string) {
+    return this.storageService.getBooksFromAuthor(id);
+  }
 }

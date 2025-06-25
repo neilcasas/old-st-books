@@ -44,6 +44,7 @@ export class StorageService {
     },
   ]);
 
+  // represents the joint table between author and books
   private authorship: Set<AuthorshipType> = new Set([
     {
       book_id: "test-book-1",
@@ -119,6 +120,14 @@ export class StorageService {
     this.books = new Set(books);
   }
 
+  getAuthorsFromBook(id: string) {
+    const authorship = [...this.authorship];
+    const authors = authorship.filter((record) => record.book_id === id).map((record) => ({
+      ...this.getAuthor(record.author_id)
+    }));
+    return authors;
+  }
+
   // Author methods
   getAuthors() {
     const authors = [...this.authors];
@@ -176,6 +185,14 @@ export class StorageService {
     } else {
       throw new NotFoundException() // TODO: More descriptive not found here?
     }
+  }
+
+  getBooksFromAuthor(id: string) {
+    const authorship = [...this.authorship];
+    const books = authorship.filter((record) => record.author_id === id).map((record) => ({
+      ...this.getBook(record.book_id)
+    }));
+    return books;
   }
 
   // Authorship methods

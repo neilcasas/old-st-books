@@ -31,4 +31,10 @@ export class AuthorsController {
   remove(@Param('id') id: string) {
     return this.authorsService.remove(id);
   }
+
+  @Get(':id/books')
+  getBooks(@Param('id') id: string) {
+    return this.authorsService.getBooks(id);
+  }
+
 }
