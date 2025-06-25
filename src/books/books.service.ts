@@ -32,20 +32,24 @@ export class BooksService {
     return this.storageService.getAuthorsFromBook(id);
   }
 
-  linkAuthor(name: string, bookId: string) {
+  linkAuthor(authorId: string, bookId: string) {
     // Verify if the book exists
     const book = this.storageService.getBook(bookId);
     if (!book) {
       // TODO: Be more specific about this exception
       throw new NotFoundException();
     }
-    let author = this.storageService.getAuthorByName(name);
-    // If the author does not exist, create that author
+    const author = this.storageService.getAuthor(authorId);
+
+    // Throw exception if author not found
     if (!author) {
-      author = this.storageService.createAuthor(name);
+      throw new NotFoundException();
     }
-    // Create record in joint table
-    const record = this.storageService.link(bookId, author.id);
-    return record;
+
+    return this.storageService.link(bookId, authorId);
+  }
+
+  removeLink(authorId: string, bookId: string) {
+    return this.storageService.unlink(bookId, authorId);
   }
 }

@@ -7,6 +7,7 @@ import { UpdateBookDto } from 'src/books/dto/update-book.dto';
 import { v4 as uuidv4 } from "uuid";
 
 type AuthorshipType = {
+  id: string;
   book_id: string;
   author_id: string;
 }
@@ -47,14 +48,17 @@ export class StorageService {
   // represents the joint table between author and books
   private authorship: Set<AuthorshipType> = new Set([
     {
+      id: "test-link-1",
       book_id: "test-book-1",
       author_id: "test-author-1",
     },
     {
+      id: "test-link-2",
       book_id: "test-book-1",
       author_id: "test-author-2",
     },
     {
+      id: "test-link-3",
       book_id: "test-book-2",
       author_id: "test-author-3",
     },
@@ -200,14 +204,19 @@ export class StorageService {
   // Authorship methods
   link(bookId: string, authorId: string) {
     const record: AuthorshipType = {
-      book_id: bookId, author_id: authorId
+      id: uuidv4(),
+      book_id: bookId,
+      author_id: authorId
     }
     this.authorship.add(record);
     return record;
   }
 
-  unlink(record: AuthorshipType) {
-    this.authorship.delete(record)
+  unlink(bookId: string, authorId: string) {
+    const record = [...this.authorship].find((record) => record.book_id === bookId && record.author_id === authorId);
+    if (record) {
+      this.authorship.delete(record);
+    }
     return record;
   }
 }
