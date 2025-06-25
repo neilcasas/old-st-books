@@ -8,7 +8,7 @@ export class BooksService {
   constructor(private readonly storageService: StorageService) { }
 
   create(createBookDto: CreateBookDto) {
-    // TODO:: only create when book has an author
+    // TODO: fix bug on dto here
     return this.storageService.createBook(createBookDto);
   }
 
@@ -32,7 +32,7 @@ export class BooksService {
     return this.storageService.getAuthorsFromBook(id);
   }
 
-  linkAuthor(authorId: string, bookId: string) {
+  linkAuthor(bookId: string, authorId: string) {
     // Verify if the book exists
     const book = this.storageService.getBook(bookId);
     if (!book) {

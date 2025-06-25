@@ -36,4 +36,9 @@ export class BooksController {
   getAuthors(@Param('id') id: string) {
     return this.booksService.getAuthors(id);
   }
+
+  @Post(':book_id/authors')
+  linkAuthor(@Param('book_id') bookId: string, @Body() authorId: { author_id: string }) {
+    return this.booksService.linkAuthor(bookId, authorId.author_id);
+  }
 }
