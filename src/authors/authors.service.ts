@@ -6,8 +6,9 @@ import { StorageService } from '@app/storage';
 @Injectable()
 export class AuthorsService {
   constructor(private readonly storageService: StorageService) { }
+
   create(createAuthorDto: CreateAuthorDto) {
-    return this.storageService.createAuthor(createAuthorDto);
+    return this.storageService.createAuthor(createAuthorDto.name);
   }
 
   findAll() {

@@ -86,11 +86,13 @@ export class StorageService {
     }
   }
 
-  createBook(createBookDto: CreateBookDto) {
-    if (!this.getBookByName(createBookDto.name)) {
+  createBook({ name, genre, pages }: CreateBookDto) {
+    if (!this.getBookByName(name)) {
       const newBook = {
-        ...createBookDto,
         id: uuidv4(),
+        name,
+        genre,
+        pages,
       };
       this.books.add(newBook);
       return newBook;
@@ -153,10 +155,10 @@ export class StorageService {
     }
   }
 
-  createAuthor(createAuthorDto: CreateAuthorDto) {
-    if (!this.getAuthorByName(createAuthorDto.name)) {
+  createAuthor(name: string) {
+    if (!this.getAuthorByName(name)) {
       const newAuthor = {
-        ...createAuthorDto,
+        name,
         id: uuidv4(),
       };
       this.authors.add(newAuthor);
@@ -201,6 +203,7 @@ export class StorageService {
       book_id: bookId, author_id: authorId
     }
     this.authorship.add(record);
+    return record;
   }
 
   unlink(record: AuthorshipType) {

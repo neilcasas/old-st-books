@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
 import { StorageService } from '@app/storage';
@@ -8,6 +8,7 @@ export class BooksService {
   constructor(private readonly storageService: StorageService) { }
 
   create(createBookDto: CreateBookDto) {
+    // TODO:: only create when book has an author
     return this.storageService.createBook(createBookDto);
   }
 
@@ -31,4 +32,20 @@ export class BooksService {
     return this.storageService.getAuthorsFromBook(id);
   }
 
+  linkAuthor(name: string, bookId: string) {
+    // Verify if the book exists
+    const book = this.storageService.getBook(bookId);
+    if (!book) {
+      // TODO: Be more specific about this exception
+      throw new NotFoundException();
+    }
+    let author = this.storageService.getAuthorByName(name);
+    // If the author does not exist, create that author
+    if (!author) {
+      author = this.storageService.createAuthor(name);
+    }
+    // Create record in joint table
+    const record = this.storageService.link(bookId, author.id);
+    return record;
+  }
 }
