@@ -1,6 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateAuthorDto } from 'src/authors/dto/create-author.dto';
+import { UpdateAuthorDto } from 'src/authors/dto/update-author.dto';
+import { Author } from 'src/authors/entities/author.entity';
 import { CreateBookDto } from 'src/books/dto/create-book.dto';
+import { UpdateBookDto } from 'src/books/dto/update-book.dto';
 import { v4 as uuidv4 } from "uuid";
 
 type AuthorshipType = {
@@ -11,7 +14,7 @@ type AuthorshipType = {
 @Injectable()
 export class StorageService {
 
-  private books: CreateBookDto[] = [
+  private books: Set<CreateBookDto> = new Set([
     {
       id: "test-book-1",
       name: "The Pragmatic Programmer",
@@ -24,9 +27,9 @@ export class StorageService {
       genre: ["Science Fiction", "Adventure"],
       pages: 688
     }
-  ];
+  ]);
 
-  private authors: CreateAuthorDto[] = [
+  private authors: Set<CreateAuthorDto> = new Set([
     {
       id: 'test-author-1',
       name: 'Andy Hunt',
@@ -39,10 +42,9 @@ export class StorageService {
       id: 'test-author-3',
       name: 'Frank Herbert',
     },
-  ];
+  ]);
 
-  private authorship: AuthorshipType[] = [
-
+  private authorship: Set<AuthorshipType> = new Set([
     {
       book_id: "test-book-1",
       author_id: "test-author-1",
@@ -55,24 +57,27 @@ export class StorageService {
       book_id: "test-book-2",
       author_id: "test-author-3",
     },
-  ]
+  ]);
 
+  // Book methods
   getBooks() {
-    return this.books;
+    const books = [...this.books];
+    return books;
   }
 
   getBook(id: string) {
     try {
-      return this.books.find((book) => book.id === id);
+      const books = [...this.books];
+      return books.find((book) => book.id === id);
     } catch (err) {
       throw new NotFoundException();
     }
   }
 
-
   getBookByName(name: string) {
     try {
-      return this.books.find((book) => book.name === name);
+      const books = [...this.books]
+      return books.find((book) => book.name === name);
     } catch (err) {
 
       // TODO: make book not found exception
@@ -86,7 +91,7 @@ export class StorageService {
         ...createBookDto,
         id: uuidv4(),
       };
-      this.books.push(newBook);
+      this.books.add(newBook);
       return newBook;
     }
     // TODO: Make duplicate book exception
@@ -95,28 +100,45 @@ export class StorageService {
 
   deleteBook(id: string) {
     const toBeRemoved = this.getBook(id);
-    this.books = this.books.filter((book) => book.id !== id);
-    return toBeRemoved;
+    if (toBeRemoved) {
+      this.books.delete(toBeRemoved);
+      return toBeRemoved;
+    } else {
+      throw new NotFoundException() // TODO: More descriptive not found here?
+    }
   }
 
+  updateBook(id: string, updateBookDto: UpdateBookDto) {
+    const books = [...this.books];
+    books.filter((book) => {
+      if (book.id === id) {
+        return { ...book, ...updateBookDto }
+      }
+      return book;
+    })
+    this.books = new Set(books);
+  }
+
+  // Author methods
   getAuthors() {
-    return this.authors;
+    const authors = [...this.authors];
+    return authors;
   }
 
   getAuthor(id: string) {
     try {
-      return this.authors.find((author) => author.id === id);
-    }
-    catch (err) {
+      const authors = [...this.authors];
+      return authors.find((author) => author.id === id);
+    } catch (err) {
       throw new NotFoundException();
     }
   }
 
   getAuthorByName(name: string) {
     try {
-      return this.authors.find((author) => author.name === name);
+      const authors = [...this.authors]
+      return authors.find((author) => author.name === name);
     } catch (err) {
-
       // TODO: make author not found exception
       throw new NotFoundException();
     }
@@ -128,17 +150,44 @@ export class StorageService {
         ...createAuthorDto,
         id: uuidv4(),
       };
-      this.authors.push(newAuthor);
+      this.authors.add(newAuthor);
       return newAuthor;
     }
     // TODO: Make duplicate author exception or just one descriptive duplicate exception
     throw new Error();
   }
 
-  deleteAuthor(id: string) {
-    const toBeRemoved = this.getAuthor(id);
-    this.authors = this.authors.filter((author) => author.id !== id);
-    return toBeRemoved;
+  updateAuthor(id: string, updateAuthorDto: UpdateAuthorDto) {
+    const authors = [...this.authors];
+    authors.filter((author) => {
+      if (author.id === id) {
+        return { ...author, ...updateAuthorDto }
+      }
+      return author;
+    })
+    this.authors = new Set(authors);
   }
 
+  deleteAuthor(id: string) {
+    const toBeRemoved = this.getAuthor(id);
+    if (toBeRemoved) {
+      this.authors.delete(toBeRemoved);
+      return toBeRemoved;
+    } else {
+      throw new NotFoundException() // TODO: More descriptive not found here?
+    }
+  }
+
+  // Authorship methods
+  link(bookId: string, authorId: string) {
+    const record: AuthorshipType = {
+      book_id: bookId, author_id: authorId
+    }
+    this.authorship.add(record);
+  }
+
+  unlink(record: AuthorshipType) {
+    this.authorship.delete(record)
+    return record;
+  }
 }
