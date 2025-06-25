@@ -93,6 +93,12 @@ export class StorageService {
     throw new Error();
   }
 
+  deleteBook(id: string) {
+    const toBeRemoved = this.getBook(id);
+    this.books = this.books.filter((book) => book.id !== id);
+    return toBeRemoved;
+  }
+
   getAuthors() {
     return this.authors;
   }
@@ -127,6 +133,12 @@ export class StorageService {
     }
     // TODO: Make duplicate author exception or just one descriptive duplicate exception
     throw new Error();
+  }
+
+  deleteAuthor(id: string) {
+    const toBeRemoved = this.getAuthor(id);
+    this.authors = this.authors.filter((author) => author.id !== id);
+    return toBeRemoved;
   }
 
 }
