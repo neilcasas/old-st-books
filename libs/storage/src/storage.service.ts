@@ -190,6 +190,10 @@ export class StorageService {
 
   // Authorship methods
   link(bookId: string, authorId: string) {
+    const duplicate = this.authorship.filter((record) => record.bookId === bookId && record.authorId === authorId);
+    if (duplicate) {
+      throw new DuplicateRecordException();
+    }
     const record: Authorship = {
       id: uuidv4(),
       bookId: bookId,

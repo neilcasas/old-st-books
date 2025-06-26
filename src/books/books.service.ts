@@ -2,6 +2,10 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
 import { StorageService } from '@app/storage';
+import { AuthorNotFoundException } from 'src/exceptions/author-not-found.exception';
+import { BookNotFoundException } from 'src/exceptions/book-not-found.exception';
+import { Book } from './entities/book.entity';
+
 
 @Injectable()
 export class BooksService {
@@ -35,14 +39,13 @@ export class BooksService {
     // Verify if the book exists
     const book = this.storageService.getBook(bookId);
     if (!book) {
-      // TODO: Be more specific about this exception
-      throw new NotFoundException();
+      throw new BookNotFoundException({ bookId: bookId });
     }
     const author = this.storageService.getAuthor(authorId);
 
     // Throw exception if author not found
     if (!author) {
-      throw new NotFoundException();
+      throw new AuthorNotFoundException({ authorId: authorId });
     }
 
     return this.storageService.link(bookId, authorId);
