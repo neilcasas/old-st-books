@@ -113,6 +113,7 @@ export class StorageService {
       }
       return book;
     });
+    return this.getBook(id);
   }
 
   getAuthorsFromBook(id: string) {
@@ -167,6 +168,8 @@ export class StorageService {
       }
       return author;
     });
+
+    return this.getAuthor(id);
   }
 
   deleteAuthor(id: string) {
@@ -227,4 +230,5 @@ export class StorageService {
     }
     return record;
   }
+
 }
