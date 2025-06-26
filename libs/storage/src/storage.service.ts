@@ -4,7 +4,7 @@ import { CreateAuthorDto } from 'src/authors/dto/create-author.dto';
 import { UpdateAuthorDto } from 'src/authors/dto/update-author.dto';
 import { UpdateBookDto } from 'src/books/dto/update-book.dto';
 import { Author, Book, Authorship, Genre } from 'libs/types';
-import { v4 as uuidv4 } from "uuid";
+import { v4 as uuidv4 } from 'uuid';
 import { BookNotFoundException } from 'src/exceptions/book-not-found.exception';
 import { AuthorNotFoundException } from 'src/exceptions/author-not-found.exception';
 import { DuplicateRecordException } from 'src/exceptions/duplicate-record.exception';
@@ -12,20 +12,19 @@ import { InvalidAuthorDeleteException } from 'invalid-author-delete.exception';
 
 @Injectable()
 export class StorageService {
-
   private books: Book[] = [
     {
-      id: "test-book-1",
-      name: "The Pragmatic Programmer",
+      id: 'test-book-1',
+      name: 'The Pragmatic Programmer',
       genre: [Genre.Educational],
-      pages: 352
+      pages: 352,
     },
     {
-      id: "test-book-2",
-      name: "Dune",
+      id: 'test-book-2',
+      name: 'Dune',
       genre: [Genre.SciFi, Genre.Fiction, Genre.Adventure],
-      pages: 688
-    }
+      pages: 688,
+    },
   ];
 
   private authors: Author[] = [
@@ -41,7 +40,7 @@ export class StorageService {
     },
     {
       id: 'test-author-3',
-      firstName: "Frank",
+      firstName: 'Frank',
       lastName: 'Herbert',
     },
   ];
@@ -49,19 +48,19 @@ export class StorageService {
   // represents the joint table between author and books
   private authorship: Authorship[] = [
     {
-      id: "test-link-1",
-      bookId: "test-book-1",
-      authorId: "test-author-1",
+      id: 'test-link-1',
+      bookId: 'test-book-1',
+      authorId: 'test-author-1',
     },
     {
-      id: "test-link-2",
-      bookId: "test-book-1",
-      authorId: "test-author-2",
+      id: 'test-link-2',
+      bookId: 'test-book-1',
+      authorId: 'test-author-2',
     },
     {
-      id: "test-link-3",
-      bookId: "test-book-2",
-      authorId: "test-author-3",
+      id: 'test-link-3',
+      bookId: 'test-book-2',
+      authorId: 'test-author-3',
     },
   ];
 
@@ -73,7 +72,7 @@ export class StorageService {
   getBook(id: string) {
     const book = this.books.find((book) => book.id === id);
     if (!book) {
-      throw new BookNotFoundException({ bookId: id })
+      throw new BookNotFoundException({ bookId: id });
     }
     return book;
   }
@@ -110,16 +109,18 @@ export class StorageService {
   updateBook(id: string, updateBookDto: UpdateBookDto) {
     this.books = this.books.filter((book) => {
       if (book.id === id) {
-        return { ...book, ...updateBookDto }
+        return { ...book, ...updateBookDto };
       }
       return book;
-    })
+    });
   }
 
   getAuthorsFromBook(id: string) {
-    const authors = this.authorship.filter((record) => record.bookId === id).map((record) => ({
-      ...this.getAuthor(record.authorId)
-    }));
+    const authors = this.authorship
+      .filter((record) => record.bookId === id)
+      .map((record) => ({
+        ...this.getAuthor(record.authorId),
+      }));
     return authors;
   }
 
@@ -137,16 +138,21 @@ export class StorageService {
   }
 
   getAuthorByName(firstName: string, lastName: string) {
-    const author = this.authors.find((author) => author.firstName === firstName && author.lastName === lastName);
+    const author = this.authors.find(
+      (author) =>
+        author.firstName === firstName && author.lastName === lastName,
+    );
     return author;
   }
 
   createAuthor(createAuthorDto: CreateAuthorDto) {
-    if (!this.getAuthorByName(createAuthorDto.firstName, createAuthorDto.lastName)) {
+    if (
+      !this.getAuthorByName(createAuthorDto.firstName, createAuthorDto.lastName)
+    ) {
       const newAuthor = {
         id: uuidv4(),
         firstName: createAuthorDto.firstName,
-        lastName: createAuthorDto.lastName
+        lastName: createAuthorDto.lastName,
       };
       this.authors.push(newAuthor);
       return newAuthor;
@@ -157,10 +163,10 @@ export class StorageService {
   updateAuthor(id: string, updateAuthorDto: UpdateAuthorDto) {
     this.authors = this.authors.filter((author) => {
       if (author.id === id) {
-        return { ...author, ...updateAuthorDto }
+        return { ...author, ...updateAuthorDto };
       }
       return author;
-    })
+    });
   }
 
   deleteAuthor(id: string) {
@@ -171,7 +177,9 @@ export class StorageService {
 
       // only delete if author has no books
       if (!books) {
-        this.authors = this.authors.filter((author) => author.id !== toBeRemoved.id);
+        this.authors = this.authors.filter(
+          (author) => author.id !== toBeRemoved.id,
+        );
         return toBeRemoved;
       } else {
         // throw forbidden exception if deleting author with books
@@ -183,31 +191,39 @@ export class StorageService {
   }
 
   getBooksFromAuthor(id: string) {
-    const books = this.authorship.filter((record) => record.authorId === id).map((record) => ({
-      ...this.getBook(record.bookId)
-    }));
+    const books = this.authorship
+      .filter((record) => record.authorId === id)
+      .map((record) => ({
+        ...this.getBook(record.bookId),
+      }));
     return books;
   }
 
   // Authorship methods
   link(bookId: string, authorId: string) {
-    const duplicate = this.authorship.filter((record) => record.bookId === bookId && record.authorId === authorId);
+    const duplicate = this.authorship.filter(
+      (record) => record.bookId === bookId && record.authorId === authorId,
+    );
     if (duplicate) {
       throw new DuplicateRecordException();
     }
     const record: Authorship = {
       id: uuidv4(),
       bookId: bookId,
-      authorId: authorId
-    }
+      authorId: authorId,
+    };
     this.authorship.push(record);
     return record;
   }
 
   unlink(bookId: string, authorId: string) {
-    const record = this.authorship.find((record) => record.bookId === bookId && record.authorId === authorId);
+    const record = this.authorship.find(
+      (record) => record.bookId === bookId && record.authorId === authorId,
+    );
     if (record) {
-      this.authorship = this.authorship.filter((authorship) => authorship.id !== record.id);
+      this.authorship = this.authorship.filter(
+        (authorship) => authorship.id !== record.id,
+      );
     }
     return record;
   }

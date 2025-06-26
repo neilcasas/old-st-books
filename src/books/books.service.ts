@@ -1,14 +1,13 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
 import { StorageService } from '@app/storage';
 import { AuthorNotFoundException } from 'src/exceptions/author-not-found.exception';
 import { BookNotFoundException } from 'src/exceptions/book-not-found.exception';
 
-
 @Injectable()
 export class BooksService {
-  constructor(private readonly storageService: StorageService) { }
+  constructor(private readonly storageService: StorageService) {}
 
   create(createBookDto: CreateBookDto) {
     return this.storageService.createBook(createBookDto);

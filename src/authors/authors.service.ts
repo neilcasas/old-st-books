@@ -5,7 +5,7 @@ import { StorageService } from '@app/storage';
 
 @Injectable()
 export class AuthorsService {
-  constructor(private readonly storageService: StorageService) { }
+  constructor(private readonly storageService: StorageService) {}
 
   create(createAuthorDto: CreateAuthorDto) {
     return this.storageService.createAuthor(createAuthorDto);

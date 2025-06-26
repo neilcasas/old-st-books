@@ -1,5 +1,11 @@
-import { ArrayNotEmpty, IsArray, IsEnum, IsInt, IsString, IsUUID, MinLength, } from "class-validator";
-import { Genre } from "libs/types";
+import {
+  ArrayNotEmpty,
+  IsArray,
+  IsEnum,
+  IsInt,
+  MinLength,
+} from 'class-validator';
+import { Genre } from 'libs/types';
 
 export class CreateBookDto {
   @MinLength(3)
