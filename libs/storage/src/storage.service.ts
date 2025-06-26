@@ -3,7 +3,7 @@ import { CreateBookDto } from 'src/books/dto/create-book.dto';
 import { CreateAuthorDto } from 'src/authors/dto/create-author.dto';
 import { UpdateAuthorDto } from 'src/authors/dto/update-author.dto';
 import { UpdateBookDto } from 'src/books/dto/update-book.dto';
-import { Author, Book, AuthorshipType, Genre } from 'libs/types';
+import { Author, Book, Authorship, Genre } from 'libs/types';
 import { v4 as uuidv4 } from "uuid";
 
 
@@ -44,7 +44,7 @@ export class StorageService {
   ];
 
   // represents the joint table between author and books
-  private authorship: AuthorshipType[] = [
+  private authorship: Authorship[] = [
     {
       id: "test-link-1",
       bookId: "test-book-1",
@@ -198,7 +198,7 @@ export class StorageService {
 
   // Authorship methods
   link(bookId: string, authorId: string) {
-    const record: AuthorshipType = {
+    const record: Authorship = {
       id: uuidv4(),
       bookId: bookId,
       authorId: authorId

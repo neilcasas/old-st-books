@@ -24,7 +24,7 @@ export type Author = {
   lastName: string;
 }
 
-export type AuthorshipType = {
+export type Authorship = {
   id: string;
   bookId: string;
   authorId: string;
