@@ -8,7 +8,6 @@ export class BooksService {
   constructor(private readonly storageService: StorageService) { }
 
   create(createBookDto: CreateBookDto) {
-    // TODO: fix bug on dto here
     return this.storageService.createBook(createBookDto);
   }
 
@@ -49,7 +48,7 @@ export class BooksService {
     return this.storageService.link(bookId, authorId);
   }
 
-  removeLink(authorId: string, bookId: string) {
+  removeLink(bookId: string, authorId: string) {
     return this.storageService.unlink(bookId, authorId);
   }
 }

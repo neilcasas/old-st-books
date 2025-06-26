@@ -8,7 +8,7 @@ export class AuthorsService {
   constructor(private readonly storageService: StorageService) { }
 
   create(createAuthorDto: CreateAuthorDto) {
-    return this.storageService.createAuthor(createAuthorDto.name);
+    return this.storageService.createAuthor(createAuthorDto);
   }
 
   findAll() {

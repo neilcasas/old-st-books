@@ -1,4 +1,11 @@
+import { IsString, MinLength } from "class-validator";
+
 export class CreateAuthorDto {
-  id: string;
-  name: string;
+  @IsString()
+  @MinLength(3)
+  firstName: string;
+
+  @IsString()
+  @MinLength(3)
+  lastName: string;
 }

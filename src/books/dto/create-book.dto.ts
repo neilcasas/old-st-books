@@ -1,6 +1,15 @@
+import { ArrayNotEmpty, IsArray, IsEnum, IsInt, IsString, IsUUID, MinLength, } from "class-validator";
+import { Genre } from "libs/types";
+
 export class CreateBookDto {
-  id: string;
+  @MinLength(3)
   name: string;
+
+  @IsInt()
   pages: number;
-  genre: string | string[];
+
+  @IsArray()
+  @IsEnum(Genre, { each: true })
+  @ArrayNotEmpty()
+  genre: Genre[];
 }
