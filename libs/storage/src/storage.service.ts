@@ -10,6 +10,8 @@ import { AuthorNotFoundException } from 'src/exceptions/author-not-found.excepti
 import { DuplicateRecordException } from 'src/exceptions/duplicate-record.exception';
 import { InvalidAuthorDeleteException } from 'src/exceptions/invalid-author-delete.exception';
 
+
+// TODO: Separate into 3 services or libraries
 @Injectable()
 export class StorageService {
   private books: Book[] = [
@@ -71,6 +73,7 @@ export class StorageService {
 
   getBook(id: string) {
     const book = this.books.find((book) => book.id === id);
+    //TODO: Business logic for books should go to books service
     if (!book) {
       throw new BookNotFoundException({ bookId: id });
     }
@@ -133,6 +136,8 @@ export class StorageService {
 
   getAuthor(id: string) {
     const author = this.authors.find((author) => author.id === id);
+
+    // TODO: Business logic for author should go to authors service
     if (!author) {
       throw new AuthorNotFoundException({ authorId: id });
     }
@@ -205,6 +210,7 @@ export class StorageService {
   }
 
   // Authorship methods
+  // TODO: Business logic for authorship should go to authorship service
   link(bookId: string, authorId: string) {
     const duplicate = this.authorship.filter(
       (record) => record.bookId === bookId && record.authorId === authorId,
