@@ -5,7 +5,8 @@ import { UpdateAuthorDto } from 'src/authors/dto/update-author.dto';
 import { UpdateBookDto } from 'src/books/dto/update-book.dto';
 import { Author, Book, Authorship, Genre } from 'libs/types';
 import { v4 as uuidv4 } from "uuid";
-
+import { BookNotFoundException } from 'src/exceptions/book-not-found.exception';
+import { AuthorNotFoundException } from 'src/exceptions/author-not-found.exception';
 
 @Injectable()
 export class StorageService {
@@ -68,11 +69,11 @@ export class StorageService {
   }
 
   getBook(id: string) {
-    try {
-      return this.books.find((book) => book.id === id);
-    } catch (err) {
-      throw new NotFoundException();
+    const book = this.books.find((book) => book.id === id);
+    if (!book) {
+      throw new BookNotFoundException({ bookId: id })
     }
+    return book;
   }
 
   getBookByName(name: string) {
@@ -80,8 +81,7 @@ export class StorageService {
       return this.books.find((book) => book.name === name);
     } catch (err) {
 
-      // TODO: make book not found exception
-      throw new NotFoundException();
+      throw new BookNotFoundException({ name: name });
     }
   }
 
@@ -106,7 +106,7 @@ export class StorageService {
       this.books = this.books.filter((book) => book.id !== toBeRemoved.id);
       return toBeRemoved;
     } else {
-      throw new NotFoundException() // TODO: More descriptive not found here?
+      throw new BookNotFoundException({ bookId: id });
     }
   }
 
@@ -132,20 +132,20 @@ export class StorageService {
   }
 
   getAuthor(id: string) {
-    try {
-      return this.authors.find((author) => author.id === id);
-    } catch (err) {
-      throw new NotFoundException();
+    const author = this.authors.find((author) => author.id === id);
+    if (!author) {
+      throw new AuthorNotFoundException({ authorId: id });
     }
+    return author;
   }
 
   getAuthorByName(firstName: string, lastName: string) {
-    try {
-      return this.authors.find((author) => author.firstName === firstName && author.lastName === lastName);
-    } catch (err) {
-      // TODO: make author not found exception
-      throw new NotFoundException();
+
+    const author = this.authors.find((author) => author.firstName === firstName && author.lastName === lastName);
+    if (!author) {
+      throw new AuthorNotFoundException({ name: { firstName, lastName } });
     }
+    return author;
   }
 
   createAuthor(createAuthorDto: CreateAuthorDto) {
@@ -185,7 +185,7 @@ export class StorageService {
         throw new Error(); // TODO: make delete author more descriptive
       }
     } else {
-      throw new NotFoundException() // TODO: More descriptive not found here?
+      throw new AuthorNotFoundException({ authorId: id });
     }
   }
 
