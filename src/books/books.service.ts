@@ -4,7 +4,6 @@ import { UpdateBookDto } from './dto/update-book.dto';
 import { StorageService } from '@app/storage';
 import { AuthorNotFoundException } from 'src/exceptions/author-not-found.exception';
 import { BookNotFoundException } from 'src/exceptions/book-not-found.exception';
-import { Book } from './entities/book.entity';
 
 
 @Injectable()

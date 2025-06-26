@@ -206,7 +206,7 @@ export class StorageService {
   unlink(bookId: string, authorId: string) {
     const record = this.authorship.find((record) => record.bookId === bookId && record.authorId === authorId);
     if (record) {
-      this.authorship.filter((authorship) => authorship.id !== record.id);
+      this.authorship = this.authorship.filter((authorship) => authorship.id !== record.id);
     }
     return record;
   }
