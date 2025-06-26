@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { CreateBookDto } from 'src/books/dto/create-book.dto';
 import { CreateAuthorDto } from 'src/authors/dto/create-author.dto';
 import { UpdateAuthorDto } from 'src/authors/dto/update-author.dto';
@@ -7,6 +7,7 @@ import { Author, Book, Authorship, Genre } from 'libs/types';
 import { v4 as uuidv4 } from "uuid";
 import { BookNotFoundException } from 'src/exceptions/book-not-found.exception';
 import { AuthorNotFoundException } from 'src/exceptions/author-not-found.exception';
+import { DuplicateRecordException } from 'src/exceptions/duplicate-record.exception';
 
 @Injectable()
 export class StorageService {
@@ -77,12 +78,8 @@ export class StorageService {
   }
 
   getBookByName(name: string) {
-    try {
-      return this.books.find((book) => book.name === name);
-    } catch (err) {
-
-      throw new BookNotFoundException({ name: name });
-    }
+    const book = this.books.find((book) => book.name === name);
+    return book;
   }
 
   createBook({ name, genre, pages }: CreateBookDto) {
@@ -96,8 +93,7 @@ export class StorageService {
       this.books.push(newBook);
       return newBook;
     }
-    // TODO: Make duplicate book exception
-    throw new Error();
+    throw new DuplicateRecordException();
   }
 
   deleteBook(id: string) {
@@ -140,11 +136,7 @@ export class StorageService {
   }
 
   getAuthorByName(firstName: string, lastName: string) {
-
     const author = this.authors.find((author) => author.firstName === firstName && author.lastName === lastName);
-    if (!author) {
-      throw new AuthorNotFoundException({ name: { firstName, lastName } });
-    }
     return author;
   }
 
@@ -158,8 +150,7 @@ export class StorageService {
       this.authors.push(newAuthor);
       return newAuthor;
     }
-    // TODO: Make duplicate author exception or just one descriptive duplicate exception
-    throw new Error();
+    throw new DuplicateRecordException();
   }
 
   updateAuthor(id: string, updateAuthorDto: UpdateAuthorDto) {
@@ -182,7 +173,8 @@ export class StorageService {
         this.authors = this.authors.filter((author) => author.id !== toBeRemoved.id);
         return toBeRemoved;
       } else {
-        throw new Error(); // TODO: make delete author more descriptive
+        // throw forbidden exception if deleting author with books
+        throw new ForbiddenException();
       }
     } else {
       throw new AuthorNotFoundException({ authorId: id });
