@@ -34,12 +34,12 @@ export class StorageService {
     {
       id: 'test-author-2',
       firstName: 'Dave',
-      lastName: 'Dave Thomas',
+      lastName: 'Thomas',
     },
     {
       id: 'test-author-3',
       firstName: "Frank",
-      lastName: 'Frank Herbert',
+      lastName: 'Herbert',
     },
   ];
 
