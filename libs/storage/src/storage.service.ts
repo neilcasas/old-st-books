@@ -100,6 +100,7 @@ export class StorageService {
     const toBeRemoved = this.getBook(id);
     if (toBeRemoved) {
       this.books = this.books.filter((book) => book.id !== toBeRemoved.id);
+      this.authorship = this.authorship.filter((record) => record.bookId !== id);
       return toBeRemoved;
     } else {
       throw new BookNotFoundException({ bookId: id });
@@ -179,10 +180,11 @@ export class StorageService {
       const books = this.getBooksFromAuthor(toBeRemoved.id);
 
       // only delete if author has no books
-      if (!books) {
+      if (books.length === 0) {
         this.authors = this.authors.filter(
           (author) => author.id !== toBeRemoved.id,
         );
+        this.authorship = this.authorship.filter((record) => record.authorId !== id);
         return toBeRemoved;
       } else {
         // throw forbidden exception if deleting author with books
