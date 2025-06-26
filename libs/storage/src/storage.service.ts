@@ -107,7 +107,7 @@ export class StorageService {
   }
 
   updateBook(id: string, updateBookDto: UpdateBookDto) {
-    this.books = this.books.filter((book) => {
+    this.books = this.books.map((book) => {
       if (book.id === id) {
         return { ...book, ...updateBookDto };
       }
@@ -161,7 +161,7 @@ export class StorageService {
   }
 
   updateAuthor(id: string, updateAuthorDto: UpdateAuthorDto) {
-    this.authors = this.authors.filter((author) => {
+    this.authors = this.authors.map((author) => {
       if (author.id === id) {
         return { ...author, ...updateAuthorDto };
       }
