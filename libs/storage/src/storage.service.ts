@@ -8,6 +8,7 @@ import { v4 as uuidv4 } from "uuid";
 import { BookNotFoundException } from 'src/exceptions/book-not-found.exception';
 import { AuthorNotFoundException } from 'src/exceptions/author-not-found.exception';
 import { DuplicateRecordException } from 'src/exceptions/duplicate-record.exception';
+import { InvalidAuthorDeleteException } from 'invalid-author-delete.exception';
 
 @Injectable()
 export class StorageService {
@@ -174,7 +175,7 @@ export class StorageService {
         return toBeRemoved;
       } else {
         // throw forbidden exception if deleting author with books
-        throw new ForbiddenException();
+        throw new InvalidAuthorDeleteException();
       }
     } else {
       throw new AuthorNotFoundException({ authorId: id });
