@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { BookNotFoundException } from 'src/exceptions/book-not-found.exception';
 import { AuthorNotFoundException } from 'src/exceptions/author-not-found.exception';
 import { DuplicateRecordException } from 'src/exceptions/duplicate-record.exception';
-import { InvalidAuthorDeleteException } from 'invalid-author-delete.exception';
+import { InvalidAuthorDeleteException } from 'src/exceptions/invalid-author-delete.exception';
 
 @Injectable()
 export class StorageService {

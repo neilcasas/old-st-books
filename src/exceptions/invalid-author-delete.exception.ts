@@ -1,13 +1,11 @@
-import { HttpException, HttpStatus } from '@nestjs/common';
+import { ForbiddenException, HttpStatus } from "@nestjs/common";
 
-export class DuplicateRecordException extends HttpException {
+export class InvalidAuthorDeleteException extends ForbiddenException {
   constructor() {
-    super(
-      {
-        error: 'Duplicate record error',
-        message: 'Record already exists.',
-      },
-      HttpStatus.FORBIDDEN,
-    );
+    super({
+      error: "Invalid delete error",
+      message: "Cannot delete author with books",
+    }), HttpStatus.FORBIDDEN
   }
 }
+
