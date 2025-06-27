@@ -11,6 +11,12 @@
     "^.+\\.(t|j)s$": "ts-jest"
   },
   "moduleNameMapper": {
+    "@app/authors-storage": "<rootDir>/../libs/authors-storage/src",
+    "@app/authors-storage/(.*)": "<rootDir>/../libs/authors-storage/src/$1",
+    "@app/authorship-storage": "<rootDir>/../libs/authorship-storage/src",
+    "@app/authorship-storage/(.*)": "<rootDir>/../libs/authorship-storage/src/$1",
+    "@app/books-storage": "<rootDir>/../libs/books-storage/src",
+    "@app/books-storage/(.*)": "<rootDir>/../libs/books-storage/src/$1",
     "@app/storage": "<rootDir>/../libs/storage/src",
     "@app/storage/(.*)": "<rootDir>/../libs/storage/src/$1"
   }

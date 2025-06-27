@@ -18,6 +18,24 @@
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
+      "@app/authors-storage": [
+        "libs/authors-storage/src"
+      ],
+      "@app/authors-storage/*": [
+        "libs/authors-storage/src/*"
+      ],
+      "@app/authorship-storage": [
+        "libs/authorship-storage/src"
+      ],
+      "@app/authorship-storage/*": [
+        "libs/authorship-storage/src/*"
+      ],
+      "@app/books-storage": [
+        "libs/books-storage/src"
+      ],
+      "@app/books-storage/*": [
+        "libs/books-storage/src/*"
+      ],
       "@app/storage": [
         "libs/storage/src"
       ],

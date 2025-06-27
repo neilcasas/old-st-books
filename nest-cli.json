@@ -7,6 +7,33 @@
     "webpack": true
   },
   "projects": {
+    "authors-storage": {
+      "type": "library",
+      "root": "libs/authors-storage",
+      "entryFile": "index",
+      "sourceRoot": "libs/authors-storage/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/authors-storage/tsconfig.lib.json"
+      }
+    },
+    "authorship-storage": {
+      "type": "library",
+      "root": "libs/authorship-storage",
+      "entryFile": "index",
+      "sourceRoot": "libs/authorship-storage/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/authorship-storage/tsconfig.lib.json"
+      }
+    },
+    "books-storage": {
+      "type": "library",
+      "root": "libs/books-storage",
+      "entryFile": "index",
+      "sourceRoot": "libs/books-storage/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/books-storage/tsconfig.lib.json"
+      }
+    },
     "storage": {
       "type": "library",
       "root": "libs/storage",
