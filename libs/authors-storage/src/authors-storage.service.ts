@@ -3,8 +3,6 @@ import { CreateAuthorDto } from 'src/authors/dto/create-author.dto';
 import { UpdateAuthorDto } from 'src/authors/dto/update-author.dto';
 import { Author } from 'libs/types';
 import { v4 as uuidv4 } from 'uuid';
-import { AuthorNotFoundException } from 'src/exceptions/author-not-found.exception';
-import { DuplicateRecordException } from 'src/exceptions/duplicate-record.exception';
 
 @Injectable()
 export class AuthorsStorageService {
@@ -32,9 +30,6 @@ export class AuthorsStorageService {
 
   getAuthor(id: string) {
     const author = this.authors.find((author) => author.id === id);
-    if (!author) {
-      throw new AuthorNotFoundException({ authorId: id });
-    }
     return author;
   }
 
@@ -47,18 +42,13 @@ export class AuthorsStorageService {
   }
 
   createAuthor(createAuthorDto: CreateAuthorDto) {
-    if (
-      !this.getAuthorByName(createAuthorDto.firstName, createAuthorDto.lastName)
-    ) {
-      const newAuthor = {
-        id: uuidv4(),
-        firstName: createAuthorDto.firstName,
-        lastName: createAuthorDto.lastName,
-      };
-      this.authors.push(newAuthor);
-      return newAuthor;
-    }
-    throw new DuplicateRecordException();
+    const newAuthor = {
+      id: uuidv4(),
+      firstName: createAuthorDto.firstName,
+      lastName: createAuthorDto.lastName,
+    };
+    this.authors.push(newAuthor);
+    return newAuthor;
   }
 
   updateAuthor(id: string, updateAuthorDto: UpdateAuthorDto) {
@@ -68,19 +58,12 @@ export class AuthorsStorageService {
       }
       return author;
     });
-
-    return this.getAuthor(id);
   }
 
-  deleteAuthor(id: string) {
-    const toBeRemoved = this.getAuthor(id);
-    if (toBeRemoved) {
-      this.authors = this.authors.filter(
-        (author) => author.id !== toBeRemoved.id,
-      );
-      return toBeRemoved;
-    } else {
-      throw new AuthorNotFoundException({ authorId: id });
-    }
+  deleteAuthor(author: Author) {
+    this.authors = this.authors.filter(
+      (author) => author.id !== author.id,
+    );
+    return author;
   }
 }

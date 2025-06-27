@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
-import { AuthorNotFoundException } from 'src/exceptions/author-not-found.exception';
 import { BookNotFoundException } from 'src/exceptions/book-not-found.exception';
 import { BooksStorageService } from '@app/books-storage';
 import { DuplicateRecordException } from 'src/exceptions/duplicate-record.exception';
@@ -52,7 +51,10 @@ export class BooksService {
       return this.bookStorageService.getAuthorsFromBook(id);
     }
   
-    linkAuthor(bookId: string, authorId: string) { // Verify if the book exists const book = this.bookStorageService.getBook(bookId); if (!book) {
+    linkAuthor(bookId: string, authorId: string) { 
+   Verify if the book exists 
+    const book = this.bookStorageService.getBook(bookId); 
+    if (!book) {
       throw new BookNotFoundException({ bookId: bookId });
     }
     const author = this.bookStorageService.getAuthor(authorId);
