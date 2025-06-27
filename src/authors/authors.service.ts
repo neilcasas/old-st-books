@@ -11,7 +11,7 @@ export class AuthorsService {
   constructor(
     private readonly authorStorageService: AuthorsStorageService,
     private readonly authorshipStorageService: AuthorshipStorageService,
-  ) {}
+  ) { }
 
   create(createAuthorDto: CreateAuthorDto) {
     const duplicate = this.authorStorageService.getAuthorByName(
@@ -33,7 +33,12 @@ export class AuthorsService {
   }
 
   update(id: string, updateAuthorDto: UpdateAuthorDto) {
-    return this.authorStorageService.updateAuthor(id, updateAuthorDto);
+    const toBeUpdated = this.authorStorageService.getAuthor(id);
+    if (!toBeUpdated) {
+      throw new AuthorNotFoundException({ authorId: id });
+    }
+    this.authorStorageService.updateAuthor(id, updateAuthorDto);
+    return toBeUpdated;
   }
 
   remove(id: string) {
@@ -41,10 +46,15 @@ export class AuthorsService {
     if (!toBeRemoved) {
       throw new AuthorNotFoundException({ authorId: id });
     }
-    return this.authorStorageService.deleteAuthor(toBeRemoved);
+    this.authorStorageService.deleteAuthor(toBeRemoved);
+    return toBeRemoved;
   }
 
   getBooks(id: string) {
+    const author = this.authorStorageService.getAuthor(id);
+    if (!author) {
+      throw new AuthorNotFoundException({ authorId: id });
+    }
     return this.authorshipStorageService.getAuthorshipsByAuthorId(id);
   }
 }
