@@ -51,6 +51,9 @@ export class BooksService {
     if (!toBeRemoved) {
       throw new BookNotFoundException({ bookId: id });
     }
+
+    // Delete all links between authors and then return
+    this.authorshipStorageService.removeAuthorshipsByBookId(id);
     return this.bookStorageService.deleteBook(toBeRemoved);
   }
 

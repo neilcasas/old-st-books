@@ -60,10 +60,10 @@ export class AuthorsStorageService {
     });
   }
 
-  deleteAuthor(author: Author) {
+  deleteAuthor(toBeDeleted: Author) {
     this.authors = this.authors.filter(
-      (author) => author.id !== author.id,
+      (author) => author.id !== toBeDeleted.id,
     );
-    return author;
+    return toBeDeleted;
   }
 }

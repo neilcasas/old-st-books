@@ -43,6 +43,12 @@ export class AuthorshipStorageService {
     return this.authorship.filter((record) => record.authorId === authorId);
   }
 
+  removeAuthorshipsByBookId(bookId: string) {
+    this.authorship = this.authorship.filter(
+      (record) => record.bookId !== bookId,
+    );
+  }
+
   link(bookId: string, authorId: string) {
     const record: Authorship = {
       id: uuidv4(),

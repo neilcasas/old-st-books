@@ -5,6 +5,7 @@ import { AuthorsStorageService } from '@app/authors-storage';
 import { DuplicateRecordException } from 'src/exceptions/duplicate-record.exception';
 import { AuthorNotFoundException } from 'src/exceptions/author-not-found.exception';
 import { AuthorshipStorageService } from '@app/authorship-storage';
+import { InvalidAuthorDeleteException } from 'src/exceptions/invalid-author-delete.exception';
 
 @Injectable()
 export class AuthorsService {
@@ -47,8 +48,17 @@ export class AuthorsService {
     if (!toBeRemoved) {
       throw new AuthorNotFoundException({ authorId: id });
     }
-    this.authorStorageService.deleteAuthor(toBeRemoved);
-    return toBeRemoved;
+
+    // Get author's books
+    const books = this.getBooks(toBeRemoved.id);
+
+    // Proceed with deletion only if author has no books
+    if (books.length === 0) {
+      this.authorStorageService.deleteAuthor(toBeRemoved);
+      return toBeRemoved;
+    }
+
+    throw new InvalidAuthorDeleteException();
   }
 
   getBooks(id: string) {

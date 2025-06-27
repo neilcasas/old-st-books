@@ -46,9 +46,9 @@ export class BooksStorageService {
     return newBook;
   }
 
-  deleteBook(book: Book) {
-    this.books = this.books.filter((book) => book.id !== book.id);
-    return book;
+  deleteBook(toBeDeleted: Book) {
+    this.books = this.books.filter((book) => book.id !== toBeDeleted.id);
+    return toBeDeleted;
   }
 
   updateBook(id: string, updateBookDto: UpdateBookDto) {
