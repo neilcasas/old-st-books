@@ -11,7 +11,7 @@ export class AuthorsService {
   constructor(
     private readonly authorStorageService: AuthorsStorageService,
     private readonly authorshipStorageService: AuthorshipStorageService,
-  ) { }
+  ) {}
 
   create(createAuthorDto: CreateAuthorDto) {
     const duplicate = this.authorStorageService.getAuthorByName(
@@ -38,7 +38,8 @@ export class AuthorsService {
       throw new AuthorNotFoundException({ authorId: id });
     }
     this.authorStorageService.updateAuthor(id, updateAuthorDto);
-    return toBeUpdated;
+    const updated = this.authorStorageService.getAuthor(id);
+    return updated;
   }
 
   remove(id: string) {

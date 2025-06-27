@@ -8,7 +8,6 @@ import { AuthorshipStorageService } from '@app/authorship-storage';
 import { AuthorsStorageService } from '@app/authors-storage';
 import { AuthorNotFoundException } from 'src/exceptions/author-not-found.exception';
 import { AuthorshipNotFoundException } from 'src/exceptions/authorship-not-found.exception';
-import { Book } from './entities/book.entity';
 
 @Injectable()
 export class BooksService {
@@ -16,7 +15,7 @@ export class BooksService {
     private readonly bookStorageService: BooksStorageService,
     private readonly authorshipStorageService: AuthorshipStorageService,
     private readonly authorStorageService: AuthorsStorageService,
-  ) { }
+  ) {}
 
   create(createBookDto: CreateBookDto) {
     // Check if book exists
