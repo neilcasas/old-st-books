@@ -7,10 +7,13 @@ import { AuthorNotFoundException } from 'src/exceptions/author-not-found.excepti
 
 @Injectable()
 export class AuthorsService {
-  constructor(private readonly authorStorageService: AuthorsStorageService) { }
+  constructor(private readonly authorStorageService: AuthorsStorageService) {}
 
   create(createAuthorDto: CreateAuthorDto) {
-    const duplicate = this.authorStorageService.getAuthorByName(createAuthorDto.firstName, createAuthorDto.lastName);
+    const duplicate = this.authorStorageService.getAuthorByName(
+      createAuthorDto.firstName,
+      createAuthorDto.lastName,
+    );
     if (duplicate) {
       throw new DuplicateRecordException();
     }

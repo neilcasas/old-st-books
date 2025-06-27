@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Authorship } from 'libs/types';
 import { v4 as uuidv4 } from 'uuid';
-import { DuplicateRecordException } from 'src/exceptions/duplicate-record.exception';
 
 @Injectable()
 export class AuthorshipStorageService {
@@ -28,6 +27,14 @@ export class AuthorshipStorageService {
     return this.authorship;
   }
 
+  getAuthorship({ bookId, authorId }: { bookId: string; authorId: string }) {
+    if (bookId && authorId) {
+      return this.authorship.find(
+        (record) => record.bookId === bookId && record.authorId === authorId,
+      );
+    }
+  }
+
   getAuthorshipsByBookId(bookId: string) {
     return this.authorship.filter((record) => record.bookId === bookId);
   }
@@ -37,12 +44,6 @@ export class AuthorshipStorageService {
   }
 
   link(bookId: string, authorId: string) {
-    const duplicate = this.authorship.find(
-      (record) => record.bookId === bookId && record.authorId === authorId,
-    );
-    if (duplicate) {
-      throw new DuplicateRecordException();
-    }
     const record: Authorship = {
       id: uuidv4(),
       bookId: bookId,
@@ -52,27 +53,9 @@ export class AuthorshipStorageService {
     return record;
   }
 
-  unlink(bookId: string, authorId: string) {
-    const record = this.authorship.find(
-      (record) => record.bookId === bookId && record.authorId === authorId,
-    );
-    if (record) {
-      this.authorship = this.authorship.filter(
-        (authorship) => authorship.id !== record.id,
-      );
-    }
-    return record;
-  }
-
-  removeAllByBookId(bookId: string) {
+  unlink(record: Authorship) {
     this.authorship = this.authorship.filter(
-      (record) => record.bookId !== bookId,
-    );
-  }
-
-  removeAllByAuthorId(authorId: string) {
-    this.authorship = this.authorship.filter(
-      (record) => record.authorId !== authorId,
+      (authorship) => authorship.id !== record.id,
     );
   }
 }

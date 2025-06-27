@@ -4,10 +4,18 @@ import { UpdateBookDto } from './dto/update-book.dto';
 import { BookNotFoundException } from 'src/exceptions/book-not-found.exception';
 import { BooksStorageService } from '@app/books-storage';
 import { DuplicateRecordException } from 'src/exceptions/duplicate-record.exception';
+import { AuthorshipStorageService } from '@app/authorship-storage';
+import { AuthorsStorageService } from '@app/authors-storage';
+import { AuthorNotFoundException } from 'src/exceptions/author-not-found.exception';
+import { AuthorshipNotFoundException } from 'src/exceptions/authorship-not-found.exception';
 
 @Injectable()
 export class BooksService {
-  constructor(private readonly bookStorageService: BooksStorageService) {}
+  constructor(
+    private readonly bookStorageService: BooksStorageService,
+    private readonly authorshipStorageService: AuthorshipStorageService,
+    private readonly authorStorageService: AuthorsStorageService,
+  ) {}
 
   create(createBookDto: CreateBookDto) {
     // Check if book exists
@@ -45,30 +53,32 @@ export class BooksService {
     return this.bookStorageService.deleteBook(toBeRemoved);
   }
 
-  //TODO: Implement with authorship service
-  /*
-    getAuthors(id: string) {
-      return this.bookStorageService.getAuthorsFromBook(id);
-    }
-  
-    linkAuthor(bookId: string, authorId: string) { 
-   Verify if the book exists 
-    const book = this.bookStorageService.getBook(bookId); 
+  getAuthors(id: string) {
+    return this.authorshipStorageService.getAuthorshipsByBookId(id);
+  }
+  linkAuthor(bookId: string, authorId: string) {
+    const book = this.bookStorageService.getBook(bookId);
     if (!book) {
       throw new BookNotFoundException({ bookId: bookId });
     }
-    const author = this.bookStorageService.getAuthor(authorId);
-  
+    const author = this.authorStorageService.getAuthor(authorId);
+
     // Throw exception if author not found
-    if(!author) {
+    if (!author) {
       throw new AuthorNotFoundException({ authorId: authorId });
     }
-  
-      return this.bookStorageService.link(bookId, authorId);
-    }
-  
-  removeLink(bookId: string, authorId: string) {
-    return this.bookStorageService.unlink(bookId, authorId);
+
+    return this.authorshipStorageService.link(bookId, authorId);
   }
-  */
+
+  removeLink(bookId: string, authorId: string) {
+    const authorship = this.authorshipStorageService.getAuthorship({
+      bookId: bookId,
+      authorId: authorId,
+    });
+    if (!authorship) {
+      throw new AuthorshipNotFoundException(bookId, authorId);
+    }
+    return this.authorshipStorageService.unlink(authorship);
+  }
 }
