@@ -3,8 +3,6 @@ import { CreateBookDto } from 'src/books/dto/create-book.dto';
 import { UpdateBookDto } from 'src/books/dto/update-book.dto';
 import { Book, Genre } from 'libs/types';
 import { v4 as uuidv4 } from 'uuid';
-import { BookNotFoundException } from 'src/exceptions/book-not-found.exception';
-import { DuplicateRecordException } from 'src/exceptions/duplicate-record.exception';
 
 @Injectable()
 export class BooksStorageService {
@@ -29,9 +27,6 @@ export class BooksStorageService {
 
   getBook(id: string) {
     const book = this.books.find((book) => book.id === id);
-    if (!book) {
-      throw new BookNotFoundException({ bookId: id });
-    }
     return book;
   }
 
@@ -41,27 +36,19 @@ export class BooksStorageService {
   }
 
   createBook({ name, genre, pages }: CreateBookDto) {
-    if (!this.getBookByName(name)) {
-      const newBook = {
-        id: uuidv4(),
-        name,
-        genre,
-        pages,
-      };
-      this.books.push(newBook);
-      return newBook;
-    }
-    throw new DuplicateRecordException();
+    const newBook = {
+      id: uuidv4(),
+      name,
+      genre,
+      pages,
+    };
+    this.books.push(newBook);
+    return newBook;
   }
 
-  deleteBook(id: string) {
-    const toBeRemoved = this.getBook(id);
-    if (toBeRemoved) {
-      this.books = this.books.filter((book) => book.id !== toBeRemoved.id);
-      return toBeRemoved;
-    } else {
-      throw new BookNotFoundException({ bookId: id });
-    }
+  deleteBook(book: Book) {
+    this.books = this.books.filter((book) => book.id !== book.id);
+    return book;
   }
 
   updateBook(id: string, updateBookDto: UpdateBookDto) {
@@ -71,6 +58,5 @@ export class BooksStorageService {
       }
       return book;
     });
-    return this.getBook(id);
   }
 }
