@@ -4,10 +4,14 @@ import { UpdateAuthorDto } from './dto/update-author.dto';
 import { AuthorsStorageService } from '@app/authors-storage';
 import { DuplicateRecordException } from 'src/exceptions/duplicate-record.exception';
 import { AuthorNotFoundException } from 'src/exceptions/author-not-found.exception';
+import { AuthorshipStorageService } from '@app/authorship-storage';
 
 @Injectable()
 export class AuthorsService {
-  constructor(private readonly authorStorageService: AuthorsStorageService) {}
+  constructor(
+    private readonly authorStorageService: AuthorsStorageService,
+    private readonly authorshipStorageService: AuthorshipStorageService,
+  ) {}
 
   create(createAuthorDto: CreateAuthorDto) {
     const duplicate = this.authorStorageService.getAuthorByName(
@@ -40,9 +44,7 @@ export class AuthorsService {
     return this.authorStorageService.deleteAuthor(toBeRemoved);
   }
 
-  /*
   getBooks(id: string) {
-    return this.authorStorageService.getBooksFromAuthor(id);
+    return this.authorshipStorageService.getAuthorshipsByAuthorId(id);
   }
-  */
 }
